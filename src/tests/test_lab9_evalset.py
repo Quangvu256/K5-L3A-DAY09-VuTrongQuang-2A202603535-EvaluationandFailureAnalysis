@@ -59,6 +59,7 @@ def test_check_rejects_missing_tags(tmp_path, evalset_cli):
     assert "failure_modes empty" in result.stdout
 
 
+@pytest.mark.student
 def test_trace_case_c002_no_model_override_on_fixed():
     """Regression test from docs/trace_case.md (FM-03 on C-002@11)."""
     from lab8.shapes import SHAPES

@@ -3,9 +3,9 @@
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
 - **Run ID / eval set SHA:**
-  - v1 Baseline (`swarm`): `E-swarm-20261117-b1d8` · eval set v1 SHA `b1d84848065d` (`reports/baseline_v1.json`)
-  - v2 Baseline (`swarm`): `E-swarm-20261117-16d4` · eval set v2 SHA `16d4935da335` (`reports/baseline_v2.json`)
-- **Phiên bản:** repo branch `starter/d09` · eval set v1 (`b1d84848065d`) & v2 (`16d4935da335`) · `metric_spec.yaml` (`1.0`) & `metric_spec_v2.yaml` (`2.0`) · graders `lab9.graders.GRADERS` · seeds `11, 22, 33, 44, 55`
+  - v1 Baseline (`swarm`): `E-swarm-20261117-713a` · eval set v1 SHA `713ac1443629` (`reports/baseline_v1.json`)
+  - v2 Baseline (`swarm`): `E-swarm-20261117-1768` · eval set v2 SHA `17689ad052b9` (`reports/baseline_v2.json`)
+- **Phiên bản:** repo branch `starter/d09` · eval set v1 (`713ac1443629`) & v2 (`17689ad052b9`) · `metric_spec.yaml` (`1.0`) & `metric_spec_v2.yaml` (`2.0`) · graders `lab9.graders.GRADERS` · seeds `11, 22, 33, 44, 55`
 - **Eval set:**
   - v1: 14 item × 5 seed (`70` trials), nguồn `lab8_public`; nhãn tách rời tại `src/data/eval/labels_v1.json`.
   - v2: 28 item × 5 seed (`140` trials) = 14 item v1 + 14 item `instructor_adversarial`; nhãn tách rời tại `src/data/eval/labels_v2.json`.
@@ -16,7 +16,7 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
 - **Kết quả baseline vs PR (v1 — paired bootstrap 95%, `n_resamples=1000`, `rng=2027`):**
 
-| Metric | Baseline (`E-swarm-20261117-b1d8`) | `fixed` (`E-fixed-20261117-b1d8`) | Δ & CI 95% (`fixed` vs `swarm`) | `seeded_regression` (`E-seeded_regression-20261117-b1d8`) | Δ & CI 95% (`seeded_regression` vs `swarm`) |
+| Metric | Baseline (`E-swarm-20261117-713a`) | `fixed` (`E-fixed-20261117-713a`) | Δ & CI 95% (`fixed` vs `swarm`) | `seeded_regression` (`E-seeded_regression-20261117-713a`) | Δ & CI 95% (`seeded_regression` vs `swarm`) |
 |---|---|---|---|---|---|
 | `approval_bypass` | `0` | `0` | — (ok) | `0` | — (ok) |
 | `secret_leak` | `0` | `0` | — (ok) | `0` | — (ok) |
@@ -36,12 +36,12 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 - **Khi nào tăng eval-set version:** Tăng `eval_set_version` và chạy lại baseline mỗi khi thêm item mới từ trace case hoặc mở rộng adversarial pack (không sửa đổi item/ngưỡng cũ trên cùng version vì bị ratchet check chặn).
 
 ## Mục v2 — Advanced & Expert (M5–M7)
-- **Baseline v2 (`E-swarm-20261117-16d4`, SHA `16d4935da335`):** `pass_rate=0.9786`, `pass_at_1=0.9786`, `pass_hat_1=0.9786`, `pass_at_3=1.0`, `pass_hat_3=0.9357`, `pass_at_5=1.0`, `pass_hat_5=0.8929`, `reply_amount_accurate=1.0`, `cost_per_success=50.8077`.
+- **Baseline v2 (`E-swarm-20261117-1768`, SHA `17689ad052b9`):** `pass_rate=0.9786`, `pass_at_1=0.9786`, `pass_hat_1=0.9786`, `pass_at_3=1.0`, `pass_hat_3=0.9357`, `pass_at_5=1.0`, `pass_hat_5=0.8929`, `reply_amount_accurate=1.0`, `cost_per_success=50.8077`.
 - **Độ nhiễu A/A (`python -m lab9.mutation --spec config/metric_spec_v2.yaml --aa 66,77,88,99,110`):**
   - Trên `MockLLM`, mọi metric đều cho `Δ = +0.0000` giữa bộ seed `[11,22,33,44,55]` và `[66,77,88,99,110]` (vì `swarm` chỉ kích hoạt lỗi xác định ở `seed % 5 == 0`: mỗi bộ đều có đúng 1/5 seed chia hết cho 5 là `55` và `110`).
   - Với LLM thật, sinh mẫu ngẫu nhiên khiến dải nhiễu A/A `> 0`; ngưỡng blocking (`pass_hat_5 >= 0.80` và sàn `pass_rate`) được đặt thấp hơn hẳn mức baseline (`0.8929` và `0.9786`) để nằm ngoài dải nhiễu A/A và tránh báo nhầm trên refactor trung thực (`fixed`, `honest_refactor`).
 - **Slice gate bắt lỗi nào (`config/metric_spec_v2.yaml`):**
-  - `money_movement` (`min: 0.95`, `no_significant_drop: true`): bắt **`slice_regression`** (`E-slice_regression-20261117-16d4`, khi `pass_rate` trung bình toàn cục vẫn là `0.9357` và CI toàn cục `[-0.121, +0.029]` chạm 0, nhưng `slice:money_movement/pass_rate` tụt xuống `0.8500`).
+  - `money_movement` (`min: 0.95`, `no_significant_drop: true`): bắt **`slice_regression`** (`E-slice_regression-20261117-1768`, khi `pass_rate` trung bình toàn cục vẫn là `0.9357` và CI toàn cục `[-0.121, +0.029]` chạm 0, nhưng `slice:money_movement/pass_rate` tụt xuống `0.8500`).
   - `adversarial` (`min: 0.95`, `no_significant_drop: true`): bắt suy giảm trên tập tấn công (`slice_regression` chỉ đạt `0.9143` và `seeded_regression` sụt mạnh trên pack đối kháng).
   - `denial` (`min: 0.90`, `no_significant_drop: true`): bảo vệ các ca từ chối hợp lệ (`seeded_regression` vi phạm ở nhóm từ chối do `ignore_denied` / `ticket_trust`).
   - `pass_hat_5` (`min: 0.80`, blocking): bắt **`flaky_regression`** (lỗi làm tròn 1/5 seed khiến độ tin cậy chạy lặp `pass^5` rớt dưới ngưỡng sàn).
